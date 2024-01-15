@@ -5,15 +5,86 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
+import { getObjectData, getStringData, isValidEmail } from "../utils/utils";
+import { signin } from "../apis/AuthAPI";
+import { AxiosError } from "axios";
+import { Dropdown } from "react-native-element-dropdown";
+
+const data = [
+  { label: "Publisher", value: "publisher" },
+  { label: "User", value: "user" },
+];
 
 const Login = ({ navigation }: any) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [userData, setUserData] = useState({
+    email: "",
+    password: "",
+    role: `${data[1].value}`, // set default value for role field
+  });
+
+  const handleChange = (name: string, value: string) => {
+    setUserData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSignin = async () => {
+    console.log("pressed");
+    console.log(userData);
+
+    if (!isValidEmail(userData.email)) {
+      Alert.alert("Thông báo!", "Nhập email đúng định dạng", [
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
+      return;
+    }
+
+    if (userData.password.length < 6) {
+      Alert.alert("Thông báo!", "Nhập mật khẩu ít nhất 6 kí tự", [
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
+      return;
+    }
+
+    const res = await signin(userData);
+
+    if (res instanceof AxiosError) {
+      console.log(res.response?.status);
+      const error = res.response?.data;
+      console.log("e: ", error);
+      Alert.alert("Lỗi", `${error.error}`, [
+        {
+          text: "Ok",
+          onPress: () => console.log("OK Pressed"),
+        },
+      ]);
+      return;
+    }
+
+    Alert.alert("Thông báo!", "Đăng nhập thành công", [
+      {
+        text: "OK",
+        onPress: async () => {
+          navigation.replace("Home");
+          // const user = await getObjectData("user");
+          // const token = await getStringData("token");
+          // console.log(">> user: ", user);
+          // console.log(">> token: ", token);
+        },
+      },
+    ]);
+    return;
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.content}>
@@ -35,7 +106,7 @@ const Login = ({ navigation }: any) => {
               color: COLORS.black,
             }}
           >
-            Đăng nhập để tận hưởng hàng ngàn khoá!
+            Đăng nhập để tận hưởng hàng ngàn khoá học!
           </Text>
         </View>
 
@@ -58,6 +129,8 @@ const Login = ({ navigation }: any) => {
               placeholder="Email"
               placeholderTextColor={COLORS.black}
               keyboardType="email-address"
+              value={userData.email}
+              onChangeText={(value) => handleChange("email", value)}
               style={{
                 width: "100%",
               }}
@@ -84,6 +157,8 @@ const Login = ({ navigation }: any) => {
               placeholder="Mật khẩu"
               placeholderTextColor={COLORS.black}
               secureTextEntry={isPasswordShown}
+              value={userData.password}
+              onChangeText={(value) => handleChange("password", value)}
               style={{
                 width: "100%",
               }}
@@ -105,6 +180,33 @@ const Login = ({ navigation }: any) => {
           </View>
         </View>
 
+        {/*        <View style={{ marginBottom: 12 }}>
+          <Text style={styles.text2}>Role</Text>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            iconStyle={styles.iconStyle}
+            data={data}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="Chọn role"
+            value={userData.role}
+            onChange={(item) => {
+              handleChange("role", item.value);
+            }}
+            renderLeftIcon={() => (
+              <AntDesign
+                style={styles.icon}
+                color="black"
+                name="Safety"
+                size={20}
+              />
+            )}
+          />
+        </View> */}
+
         <View
           style={{
             flexDirection: "row",
@@ -114,7 +216,7 @@ const Login = ({ navigation }: any) => {
 
         <Button
           onPress={() => {
-            navigation.navigate("Home");
+            handleSignin();
           }}
           title="Đăng nhập"
           filled
@@ -130,7 +232,7 @@ const Login = ({ navigation }: any) => {
 
         <View style={styles.contentBottom}>
           <Text style={styles.text2}>Chưa có tài khoản?</Text>
-          <Pressable onPress={() => navigation.navigate("Signup")}>
+          <Pressable onPress={() => navigation.replace("Signup")}>
             <Text style={styles.textButton}>Đăng ký</Text>
           </Pressable>
         </View>
@@ -179,6 +281,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 12,
     justifyContent: "center",
+  },
+  // dropdown
+  dropdown: {
+    height: 50,
+    borderBottomColor: "gray",
+    borderWidth: 1,
+    padding: 20,
+    borderRadius: 10,
+    // borderBottomWidth: 0.5,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
   },
 });
 

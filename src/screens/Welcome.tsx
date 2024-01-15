@@ -1,10 +1,23 @@
 import { View, Text, StyleSheet, SafeAreaView, Pressable } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
 import Button from "../components/Button";
+import { getObjectData } from "../utils/utils";
 
 const Welcome = ({ navigation }: any) => {
+  useEffect(() => {
+    getObjectData("user")
+      .then((user) => {
+        if (user) {
+          navigation.replace("Home");
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi khi kiểm tra dữ liệu người dùng:", error);
+      });
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <LinearGradient
@@ -38,14 +51,14 @@ const Welcome = ({ navigation }: any) => {
               style={styles.button}
               title="Đăng ký"
               onPress={() => {
-                navigation.navigate("Signup");
+                navigation.replace("Signup");
               }}
             />
             <View style={styles.contentBottom}>
               <Text style={styles.text2}>Đã có tài khoản?</Text>
               <Pressable
                 onPress={() => {
-                  navigation.navigate("Login")
+                  navigation.replace("Login");
                 }}
               >
                 <Text style={styles.textButton}> Đăng nhập</Text>

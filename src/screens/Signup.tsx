@@ -14,7 +14,7 @@ import { AntDesign, Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
 import { Dropdown } from "react-native-element-dropdown";
 
-import { userSignup } from "../apis/AuthAPI";
+import { signup } from "../apis/AuthAPI";
 import { AxiosError } from "axios";
 import { isValidEmail } from "../utils/utils";
 
@@ -64,7 +64,7 @@ const Signup = ({ navigation }: any) => {
       return;
     }
 
-    const res = await userSignup(userData);
+    const res = await signup(userData);
 
     if (res instanceof AxiosError) {
       console.log(res.response?.status);
@@ -80,7 +80,7 @@ const Signup = ({ navigation }: any) => {
     }
 
     Alert.alert("Thông báo!", "Tạo tài khoản thành công!", [
-      { text: "OK", onPress: () => navigation.replace("Home") },
+      { text: "OK", onPress: () => navigation.replace("Login") },
     ]);
     return;
   };
@@ -262,7 +262,7 @@ const Signup = ({ navigation }: any) => {
           {/* <Pressable onPress={() => navigation.navigate("Login")}> */}
           <Pressable
             onPress={() => {
-              navigation.navigate("Login");
+              navigation.replace("Login");
             }}
           >
             <Text style={styles.textButton}>Đăng nhập</Text>

@@ -12,6 +12,8 @@ import BootcampItem from "../components/BootcampItem";
 import CustomSearchBar from "../components/CustomSearchBar";
 import { getBootcamps } from "../apis/BootcampAPI";
 import { Bootcamp } from "../types/types";
+import Button from "../components/Button";
+import { clearAll } from "../utils/utils";
 
 const Home = ({ navigation }: any) => {
   const [search, setSearch] = useState<string>("");
@@ -44,6 +46,15 @@ const Home = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <Button
+        onPress={() => {
+          clearAll();
+          navigation.replace("Welcome");
+        }}
+        title="Đăng xuất"
+        filled
+        style={styles.button}
+      />
       <View style={styles.content}>
         {bootcamps.length > 0 ? (
           <View>
