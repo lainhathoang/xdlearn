@@ -113,7 +113,9 @@ const Login = ({ navigation }: any) => {
         ></View>
 
         <Button
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
           title="Đăng nhập"
           filled
           style={styles.button}
