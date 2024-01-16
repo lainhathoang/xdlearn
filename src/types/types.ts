@@ -2,21 +2,22 @@ export interface Bootcamp {
   _id: string;
   name: string;
   description: string;
-    website: string;
-  //   phone: string;
-  //   email: string;
-  //   careers: string[];
-    photo: string;
-  //   housing: boolean;
-  //   jobAssistance: boolean;
-  //   jobGuarantee: boolean;
-  //   acceptGi: boolean;
-  //   user: string;
-  //   createdAt: string;
-  //   slug: string;
-  //   averageCost: number;
-  //   averageRating: number;
-    courses: Course[];
+  website: string;
+  phone: string;
+  email: string;
+  location: Location;
+  careers: string[];
+  photo: string;
+  housing: boolean;
+  jobAssistance: boolean;
+  jobGuarantee: boolean;
+  acceptGi: boolean;
+  user: string;
+  createdAt: string;
+  slug: string;
+  averageCost: number;
+  averageRating: number;
+  courses: Course[];
 }
 
 export interface Course {
@@ -40,5 +41,3 @@ interface Location {
   zipcode: string;
   country: string;
 }
-
-

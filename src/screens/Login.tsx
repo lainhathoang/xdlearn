@@ -10,12 +10,11 @@ import {
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
-import { getObjectData, getStringData, isValidEmail } from "../utils/utils";
+import { isValidEmail } from "../utils/utils";
 import { signin } from "../apis/AuthAPI";
 import { AxiosError } from "axios";
-import { Dropdown } from "react-native-element-dropdown";
 
 const data = [
   { label: "Publisher", value: "publisher" },
@@ -73,12 +72,8 @@ const Login = ({ navigation }: any) => {
     Alert.alert("Thông báo!", "Đăng nhập thành công", [
       {
         text: "OK",
-        onPress: async () => {
+        onPress: () => {
           navigation.replace("Home");
-          // const user = await getObjectData("user");
-          // const token = await getStringData("token");
-          // console.log(">> user: ", user);
-          // console.log(">> token: ", token);
         },
       },
     ]);

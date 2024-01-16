@@ -48,7 +48,7 @@ export default function App() {
           name="BootcampDetails"
           component={BootcampDetails}
           options={{
-            headerShown: true,
+            headerShown: false,
             animation: "none",
           }}
         />

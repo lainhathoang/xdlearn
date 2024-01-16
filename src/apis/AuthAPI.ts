@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import APIManager from "./APiManager";
+import APIManager from "./APIManager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storeObjectData, storeStringData } from "../utils/utils";
 

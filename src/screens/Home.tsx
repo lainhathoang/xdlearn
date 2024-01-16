@@ -55,13 +55,10 @@ const Home = ({ navigation }: any) => {
         filled
         style={styles.button}
       />
+      <CustomSearchBar onSearch={setSearch} placeholder="Search Bootcamps..." />
       <View style={styles.content}>
         {bootcamps.length > 0 ? (
           <View>
-            <CustomSearchBar
-              onSearch={setSearch}
-              placeholder="Search Bootcamps..."
-            />
             <FlatList
               data={bootcamps}
               renderItem={({ item }) => (
@@ -124,7 +121,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 22,
+    paddingHorizontal: 16,
   },
   contentBottom: {
     flexDirection: "row",

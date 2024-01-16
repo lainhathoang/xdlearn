@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
-import APIManager from "./APiManager";
+import APIManager from "./APIManager";
+import { getStringData } from "../utils/utils";
 
 export const getBootcamps = async () => {
   try {
@@ -12,6 +13,22 @@ export const getBootcamps = async () => {
   }
 };
 
-export const getBootcampById = async() => {
-  
-}
+export const getBootcampById = async () => {};
+
+export const deleteBootcampById = async (bootcampId: string) => {
+  const token = await getStringData("token");
+  console.log(">> token: ", token);
+  try {
+    const result = await APIManager(`/bootcamps/${bootcampId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return result.status;
+  } catch (error) {
+    return error;
+  }
+};
