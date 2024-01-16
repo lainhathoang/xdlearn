@@ -3,67 +3,147 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
+  ScrollView,
+  Alert,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { Bootcamp } from "../types/types";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "react-native-elements";
+import { AntDesign } from "@expo/vector-icons";
+import COLORS from "../constants/colors";
+import { deleteBootcampById } from "../apis/BootcampAPI";
+import { AxiosError } from "axios";
 
-const BootcampDetails: React.FC = () => {
+const BootcampDetails: React.FC = ({ navigation }: any) => {
   const route = useRoute();
   const { bootcamp } = route.params as { bootcamp: Bootcamp };
-  
-  const onEdit = () => {};
-  const onDelete = () => {};
+
+  const onEdit = () => {
+    console.log(">> onedit");
+  };
+  const onDelete = async () => {
+    Alert.alert("Thông báo!", "Bạn có muốn xoá?", [
+      {
+        text: "Cancle",
+        onPress: () => {},
+      },
+      {
+        text: "OK",
+        onPress: async () => {
+          const result = await deleteBootcampById(bootcamp._id);
+          if (result === 204) {
+            navigation.replace("Home");
+          } else {
+            // ?
+            if (result instanceof AxiosError) {
+              console.log(result.response?.data);
+              Alert.alert(
+                "Xoá không thành công!",
+                `${result.response?.data.error}`,
+                [
+                  {
+                    text: "OK",
+                    onPress: () => {},
+                  },
+                ]
+              );
+            }
+          }
+        },
+      },
+    ]);
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{bootcamp.name}</Text>
-
-      {/* Image Display */}
-      <Image
-        source={{
-          uri: "https://res.cloudinary.com/practicaldev/image/fetch/s--hQUZN7xB--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/luo0sx64k6xd8dogd3um.jpg",
-        }}
-        style={styles.bootcampImage}
-      />
-
-      <Text style={styles.description}>{bootcamp.description}</Text>
-
-      {/* Add more detailed sections as needed */}
-      <View style={styles.infoSection}>
-        <Text style={styles.infoLabel}>Website:</Text>
-        <Text style={styles.infoContent}>{bootcamp.website}</Text>
+    <SafeAreaView>
+      <View style={styles.header}>
+        <Text style={styles.title}>
+          {bootcamp.name.length > 15
+            ? `${bootcamp.name.substring(0, 15)}...`
+            : `${bootcamp.name}`}
+        </Text>
+        <View style={styles.headerIcons}>
+          <TouchableOpacity onPress={() => onEdit()}>
+            <AntDesign name="edit" size={24} color={COLORS.black} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => onDelete()}>
+            <AntDesign name="delete" size={24} color={COLORS.black} />
+          </TouchableOpacity>
+        </View>
       </View>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.container}>
+          {/* Image Display */}
+          <Image
+            source={{
+              uri: "https://res.cloudinary.com/practicaldev/image/fetch/s--hQUZN7xB--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/luo0sx64k6xd8dogd3um.jpg",
+            }}
+            style={styles.bootcampImage}
+          />
 
-      {/* Action Buttons */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={onEdit}>
-          <Text style={styles.buttonText}>Edit Bootcamp</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, styles.deleteButton]}
-          onPress={onDelete}
-        >
-          <Text style={styles.buttonText}>Delete Bootcamp</Text>
-        </TouchableOpacity>
-      </View>
+          <Text style={styles.description}>{bootcamp.description}</Text>
 
-      {/* Courses List */}
-      <Text style={styles.sectionTitle}>Courses:</Text>
-      <FlatList
-        data={bootcamp.courses}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <Text style={styles.courseItem}>{item.title}</Text>
-        )}
-      />
-    </View>
+          {/* detailed sections */}
+          <View style={styles.infoSection}>
+            <Text style={styles.infoLabel}>Website:</Text>
+            <Text style={styles.infoContent}>{bootcamp.website}</Text>
+          </View>
+          <View style={styles.infoSection}>
+            <Text style={styles.infoLabel}>SDT:</Text>
+            <Text style={styles.infoContent}>{bootcamp.phone}</Text>
+          </View>
+          <View style={styles.infoSection}>
+            <Text style={styles.infoLabel}>Địa chỉ:</Text>
+            <Text style={styles.infoContent}>
+              {bootcamp.location.formattedAddress}
+            </Text>
+          </View>
+          <View style={styles.infoSection}>
+            <Text style={styles.infoLabel}>Đánh giá trung bình:</Text>
+            <Text style={styles.infoContent}>
+              {bootcamp.averageRating}{" "}
+              <AntDesign name="star" size={24} color={COLORS.primary} />
+            </Text>
+          </View>
+          <View style={styles.infoSection}>
+            <Text style={styles.infoLabel}>Cơ hội nghề nghiệp:</Text>
+            {bootcamp.careers.map((v, i) => {
+              return <Text style={styles.infoContent}> - {v}</Text>;
+            })}
+          </View>
+
+          {/* Courses List */}
+          {/* <Text style={styles.sectionTitle}>Nội dung khoá:</Text>
+          <View style={styles.infoSection}>
+            {bootcamp.courses.map((v, i) => {
+              return <Text style={styles.infoContent}> - {v.title}</Text>;
+            })}
+          </View> */}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+  },
+  headerIcons: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 10,
+  },
+  scrollView: {
+    marginTop: 16,
+    marginBottom: 32,
+  },
   button: {
     backgroundColor: "#007bff",
     padding: 10,
