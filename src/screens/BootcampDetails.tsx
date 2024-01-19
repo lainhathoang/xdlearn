@@ -8,7 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { BootcampModel } from "../models/types";
+import { Bootcamp } from "../types/types";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "react-native-elements";
 import { AntDesign } from "@expo/vector-icons";
@@ -18,10 +18,11 @@ import { AxiosError } from "axios";
 
 const BootcampDetails: React.FC = ({ navigation }: any) => {
   const route = useRoute();
-  const { bootcamp } = route.params as { bootcamp: BootcampModel };
+  const { bootcamp } = route.params as { bootcamp: Bootcamp };
 
-  const onEdit = () => {};
-
+  const onEdit = () => {
+    console.log(">> onedit");
+  };
   const onDelete = async () => {
     Alert.alert("Thông báo!", "Bạn có muốn xoá?", [
       {
@@ -64,11 +65,7 @@ const BootcampDetails: React.FC = ({ navigation }: any) => {
             : `${bootcamp.name}`}
         </Text>
         <View style={styles.headerIcons}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("BootcampEditScreen", { bootcamp: bootcamp })
-            }
-          >
+          <TouchableOpacity onPress={() => onEdit()}>
             <AntDesign name="edit" size={24} color={COLORS.black} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => onDelete()}>
@@ -79,25 +76,14 @@ const BootcampDetails: React.FC = ({ navigation }: any) => {
       <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
           {/* Image Display */}
-          {bootcamp.photo !== "" ? (
-            <Image
-              source={{
-                uri: `${bootcamp.photo}`,
-              }}
-              style={styles.bootcampImage}
-            />
-          ) : (
-            <Image
-              source={{
-                uri: "https://res.cloudinary.com/practicaldev/image/fetch/s--hQUZN7xB--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/luo0sx64k6xd8dogd3um.jpg",
-              }}
-              style={styles.bootcampImage}
-            />
-          )}
+          <Image
+            source={{
+              uri: "https://res.cloudinary.com/practicaldev/image/fetch/s--hQUZN7xB--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/luo0sx64k6xd8dogd3um.jpg",
+            }}
+            style={styles.bootcampImage}
+          />
 
           <Text style={styles.description}>{bootcamp.description}</Text>
-
-          <Text style={styles.sectionTitle}>Thông tin liên hệ</Text>
 
           {/* detailed sections */}
           <View style={styles.infoSection}>
@@ -124,12 +110,7 @@ const BootcampDetails: React.FC = ({ navigation }: any) => {
           <View style={styles.infoSection}>
             <Text style={styles.infoLabel}>Cơ hội nghề nghiệp:</Text>
             {bootcamp.careers.map((v, i) => {
-              return (
-                <Text style={styles.infoContent} key={i}>
-                  {" "}
-                  - {v}
-                </Text>
-              );
+              return <Text style={styles.infoContent}> - {v}</Text>;
             })}
           </View>
 
@@ -195,7 +176,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     color: "#666",
-    marginBottom: 16,
+    marginBottom: 20,
   },
   infoSection: {
     marginBottom: 10,

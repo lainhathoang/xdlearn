@@ -1,9 +1,9 @@
 // BootcampItem.tsx
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { BootcampModel } from "../models/types";
+import { Bootcamp } from "../types/types";
 
-const BootcampItem: React.FC<{ bootcamp: BootcampModel }> = ({ bootcamp }) => {
+const BootcampItem: React.FC<{ bootcamp: Bootcamp }> = ({ bootcamp }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{bootcamp.name}</Text>
