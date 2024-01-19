@@ -1,6 +1,8 @@
 import axios, { AxiosError } from "axios";
 import APIManager from "./APIManager";
 import { getStringData } from "../utils/utils";
+import { BootcampCreateDTO } from "../models/dto/BootcampCreateDTO";
+import { BootcampUpdateDTO } from "../models/dto/BootcampUpdateDTO";
 
 export const getBootcamps = async () => {
   try {
@@ -25,6 +27,42 @@ export const deleteBootcampById = async (bootcampId: string) => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+    });
+
+    return result.status;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const createBootcamp = async (bootcamp: BootcampCreateDTO) => {
+  const token = await getStringData("token");
+  try {
+    const result = await APIManager(`/bootcamps`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      data: bootcamp,
+    });
+
+    return result.status;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateBootcamp = async (bootcamp: BootcampUpdateDTO, id: string) => {
+  const token = await getStringData("token");
+  try {
+    const result = await APIManager(`/bootcamps/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      data: bootcamp,
     });
 
     return result.status;

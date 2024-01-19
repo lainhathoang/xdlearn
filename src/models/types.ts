@@ -1,4 +1,4 @@
-export interface Bootcamp {
+export interface BootcampModel {
   _id: string;
   name: string;
   description: string;
@@ -17,18 +17,7 @@ export interface Bootcamp {
   slug: string;
   averageCost: number;
   averageRating: number;
-  courses: Course[];
-}
-
-export interface Course {
-  _id: string;
-  title: string;
-  description: string;
-  weeks: string;
-  tuition: number;
-  minimumSkill: string[];
-  bootcamp: string;
-  user: string;
+  // courses: Course[];
 }
 
 interface Location {
@@ -41,3 +30,14 @@ interface Location {
   zipcode: string;
   country: string;
 }
+
+// export interface Course {
+//   _id: string;
+//   title: string;
+//   description: string;
+//   weeks: string;
+//   tuition: number;
+//   minimumSkill: string[];
+//   bootcamp: string;
+//   user: string;
+// }

@@ -11,13 +11,14 @@ import COLORS from "../constants/colors";
 import BootcampItem from "../components/BootcampItem";
 import CustomSearchBar from "../components/CustomSearchBar";
 import { getBootcamps } from "../apis/BootcampAPI";
-import { Bootcamp } from "../types/types";
+import { BootcampModel } from "../models/types";
 import Button from "../components/Button";
 import { clearAll } from "../utils/utils";
+import { Ionicons } from "@expo/vector-icons";
 
 const Home = ({ navigation }: any) => {
   const [search, setSearch] = useState<string>("");
-  const [bootcamps, setBootcamps] = useState<Bootcamp[]>([]);
+  const [bootcamps, setBootcamps] = useState<BootcampModel[]>([]);
 
   const filteredBootcamps = bootcamps.filter((bootcamp) =>
     bootcamp.name.toLowerCase().includes(search.toLowerCase())
@@ -77,6 +78,13 @@ const Home = ({ navigation }: any) => {
         ) : (
           <Text>No Bootcamp Available ...</Text>
         )}
+
+        <TouchableOpacity
+          style={styles.floatingButton}
+          onPress={() => navigation.navigate("AddBootcampScreen")}
+        >
+          <Ionicons name="add" size={24} color={COLORS.white} />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -127,6 +135,22 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 12,
     justifyContent: "center",
+  },
+  // float button
+  floatingButton: {
+    position: "absolute",
+    width: 56,
+    height: 56,
+    alignItems: "center",
+    justifyContent: "center",
+    right: 20,
+    bottom: 20,
+    backgroundColor: COLORS.primary,
+    borderRadius: 30,
+    elevation: 8,
+    shadowOpacity: 0.3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 2,
   },
 });
 
